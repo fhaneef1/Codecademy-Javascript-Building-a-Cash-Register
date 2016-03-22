@@ -1,0 +1,57 @@
+#Codecademy Javascript: Building a Cash Register
+
+// Creates an object constructor so we can easily create objects for the staff members
+function StaffMember(name,discountPercent){
+    this.name = name;
+    this.discountPercent = discountPercent;
+}
+// Creates objects Sally and Bob who get 5% and 10% employee discounts, respectively
+var sally = new StaffMember("Sally",5);
+var bob = new StaffMember("Bob",10);
+
+// Creates an object "me" with a discount of 20% off because I built the cash register and I am awesome
+var me = new StaffMember("Fatima",20);
+
+// Cash register value starts off at 0
+var cashRegister = {
+    total:0,
+    lastTransactionAmount: 0,
+    
+  // Creates the method "add" to add an item's cost to the total
+  // Sets lastTransactionAmount to the last itemCost (we need this later to void the last transaction)
+    add: function(itemCost){
+        this.total += (itemCost || 0);
+        this.lastTransactionAmount = itemCost;
+    },
+    
+  // Creates the method "scan" with the item name and quantity as parameters.
+  // Switch statement allows us to define cases of item names that will use the "add" method from above to add the item cost * quantity
+    scan: function(item,quantity){
+        switch (item){
+        case "eggs": this.add(0.98 * quantity); break;
+        case "milk": this.add(1.23 * quantity); break;
+        case "magazine": this.add(4.99 * quantity); break;
+        case "chocolate": this.add(0.45 * quantity); break;
+        }
+    },
+    
+    // Function to void the last transaction (or subtract the last transaction amount from the total)
+    voidLastTransaction : function(){
+        this.total -= this.lastTransactionAmount;
+        this.lastTransactionAmount = 0;
+    },
+    // Creates a new method to apply the employee discount to the total
+    applyStaffDiscount: function(employee) {
+        this.total -= (this.total*(employee.discountPercent / 100))
+    },
+};
+
+// Testing the ccash register by adding some items
+cashRegister.scan('eggs',1);
+cashRegister.scan('milk',1);
+cashRegister.scan('magazine',3);
+// Applying the staff discount by passing the "me" object that I defined earlier
+cashRegister.applyStaffDiscount(me);
+
+// Shows the total bill
+console.log('Your bill is '+cashRegister.total.toFixed(2));
